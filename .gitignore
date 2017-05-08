@@ -1,2 +1,8 @@
-/tools
+tools/
+boot/
+fastboot_rom/
+log/
+recovery/
+rom/
+systemnewdat_extract/
 Start_dev.bat
