@@ -15,8 +15,7 @@ Quindi, per aiutare tutti voi utenti, il team MIUI ITALIA ha deciso di creare qu
 
 ## Changelog
 
--3.0.7 Stabile
+3.0.7 Stabile
 -Bugfix
 -Aggiunto supporto completo Redmi 4X
 -Aggiunto supporto al Mi 5c (Escluso Fastboot) 
---
