@@ -1,0 +1,98 @@
+:cappu_fastboot
+cls
+echo xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+echo x                                                                              x
+echo x                              MIUI Recovery Tool                              x
+echo x                                     by                                       x
+echo x                                 www.miui.it                                  x
+echo x                                                                              x
+echo xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+echo.
+echo.
+echo.
+echo.
+echo Devi prima scaricare l'ultima ROM FASTBOOT disponibile per il tuo terminale premi il tasto "I" per aprire la pagina
+echo.
+echo Una volta scaricato, inserisci il file nella cartella /fastboot_rom
+echo.
+echo Collega il tuo dispositivo al PC in modalita' FASTBOOT
+echo.
+echo Stai per procedere al ripristino tramite la ROM FASTBOOT
+echo.
+echo Se premi "S" procederai al flash
+echo Se Premi "N" annullerai il flash
+:cappu_restart
+echo.
+set/p option=Digita l'operazione desiderata:
+if "%option%"=="S" goto cappu_S
+if "%option%"=="s" goto cappu_S
+if "%option%"=="N" goto cappu_N
+if "%option%"=="n" goto cappu_N
+if "%option%"=="I" start "" http://en.miui.com/a-234.html
+if "%option%"=="i" start "" http://en.miui.com/a-234.html
+goto cappu_restart
+
+:cappu_S
+echo.
+IF EXIST "%FASTBOOTROM%\*.tar" (
+goto extracttar_cappu
+) else (
+goto checktgz_cappu)
+:checktgz_cappu
+IF EXIST "%FASTBOOTROM%\*.tgz" (
+echo.
+echo Estrazione in corso, richiedera' qualche minuto...
+%TOOLS%\\7za e %FASTBOOTROM%\*.tgz -o%WORKINGDIR%
+IF EXIST "%WORKINGDIR%\*.tar" ( goto extracttar_cappu)
+:extracttar_cappu
+%TOOLS%\\7za e %WORKINGDIR%\*.tar -o%WORKINGDIR%
+echo.
+echo Si sta procedendo alla modifica dei file...
+mkdir %FASTBOOTROM%/images>NUL
+IF EXIST "%WORKINGDIR%\*.tar" ( del %WORKINGDIR%\*.tar )>NUL
+IF EXIST "%WORKINGDIR%\*.bat" ( move %WORKINGDIR%\*.bat %FASTBOOTROM% )>NUL
+IF EXIST "%WORKINGDIR%\*.sh" ( move %WORKINGDIR%\*.sh %FASTBOOTROM% )>NUL
+IF EXIST "%WORKINGDIR%\*.py" ( move %WORKINGDIR%\*.py %FASTBOOTROM% )>NUL
+IF EXIST "%WORKINGDIR%\misc.txt" ( move %WORKINGDIR%\misc.txt %FASTBOOTROM% )>NUL
+%XCOPY% /s %WORKINGDIR% %FASTBOOTROM%\images>NUL
+rmdir %WORKINGDIR% /s /q>NUL
+IF EXIST "%FASTBOOTROM%\*.tgz" (del %FASTBOOTROM%\*.tgz)>NUL
+IF EXIST "%FASTBOOTROM%\*.tar" (del %FASTBOOTROM%\*.tar)>NUL
+copy %TOOLS%\fart.exe %FASTBOOTROM%>NUL
+%FASTBOOTROM%\fart %FASTBOOTROM%\*.bat ~dp0 FASTBOOTROM%%\>NUL
+%FASTBOOTROM%\fart %FASTBOOTROM%\*.bat fastboot %%FASTBOOT%%>NUL
+%FASTBOOTROM%\fart %FASTBOOTROM%\*.bat findstr %%FIND%%>NUL
+goto start_cappu
+) else (
+echo Il TOOL non e' in grado di eseguire questa funzionalita' perche' non hai inserito la rom fastboot dentro la cartella /fastboot_rom
+echo.
+pause
+goto home)
+:start_cappu
+echo.
+echo Stai per avviare il ripristino del Mi Pad 2...
+echo.
+echo Scegli l'opzione che ti interessa:
+echo.
+echo Se premi "1" avvierai l'opzione "flash_all"
+echo Se premi "2" avvierai l'opzione "flash_all_except_data_storage"
+echo.
+set/p option=Scegli un numero:
+if "%option%"=="1" CALL %FASTBOOTROM%\flash_all.bat
+if "%option%"=="2" CALL %FASTBOOTROM%\flash_all_except_data_storage.bat
+echo.
+echo Riavvio dispositivo in corso...
+echo.
+echo I file estratti sono stati cancellati in automatico!
+rmdir %FASTBOOTROM% /s /q>NUL
+mkdir %FASTBOOTROM%>NUL
+echo.
+pause
+goto fastboot_home
+
+:cappu_N
+echo.
+echo Hai deciso di annullare il ripristino totale!
+echo.
+pause
+goto fastboot_home
