@@ -14,7 +14,7 @@ In questi mesi sul forum abbiamo assistito in modo crescente a segnalazioni di h
 Quindi, per aiutare tutti voi utenti, il team MIUI ITALIA ha deciso di creare questo TOOL, rivolto a tutti gli utenti, soprattutto per aiutare chi è meno esperto, ma che sicuramente tornerà ancor più utile anche ai più esperti.
 
 ## Changelog
---
+
 -3.0.7 Stabile
 -Bugfix
 -Aggiunto supporto completo Redmi 4X
